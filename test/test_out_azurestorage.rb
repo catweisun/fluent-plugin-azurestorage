@@ -11,14 +11,15 @@ include Fluent::Test::Helpers
 
 class AzureStorageOutputTest < Test::Unit::TestCase
   def setup
-    require 'azure'
+    require 'azure/storage/blob'
     Fluent::Test.setup
   end
 
   CONFIG = %[
-    azure_storage_account test_storage_account
-    azure_storage_access_key dGVzdF9zdG9yYWdlX2FjY2Vzc19rZXk=
-    azure_container test_container
+    azure_storage_account stgfluntplugin
+    azure_storage_access_key key
+    azure_storage_dns_suffix core.chinacloudapi.cn
+    azure_container testcontainer
     path log
     utc
     buffer_type memory
@@ -47,9 +48,9 @@ class AzureStorageOutputTest < Test::Unit::TestCase
 
   def test_configure
     d = create_driver
-    assert_equal 'test_storage_account', d.instance.azure_storage_account
-    assert_equal 'dGVzdF9zdG9yYWdlX2FjY2Vzc19rZXk=', d.instance.azure_storage_access_key
-    assert_equal 'test_container', d.instance.azure_container
+    assert_equal 'stgfluntplugin', d.instance.azure_storage_account
+    assert_equal 'PVbLI/mKeZj5aLglx8CHhW/2abMsXGJRWTxjziy/WW/fMnaDcoJ7KJomxYoYiVkvgjZoMVlzDCYWdfHOirUneA==', d.instance.azure_storage_access_key
+    assert_equal 'testcontainer', d.instance.azure_container
     assert_equal 'log', d.instance.path
     assert_equal 'gz', d.instance.instance_variable_get(:@compressor).ext
     assert_equal 'application/x-gzip', d.instance.instance_variable_get(:@compressor).content_type
@@ -221,10 +222,10 @@ class AzureStorageOutputTest < Test::Unit::TestCase
   end
 
   CONFIG_TIME_SLICE = %[
-    hostname testing.node.local
-    azure_storage_account test_storage_account
-    azure_storage_access_key dGVzdF9zdG9yYWdlX2FjY2Vzc19rZXk=
-    azure_container test_container
+    azure_storage_account stgfluntplugin
+    azure_storage_access_key PVbLI/mKeZj5aLglx8CHhW/2abMsXGJRWTxjziy/WW/fMnaDcoJ7KJomxYoYiVkvgjZoMVlzDCYWdfHOirUneA==
+    azure_storage_dns_suffix core.chinacloudapi.cn
+    azure_container testcontainer
     azure_object_key_format %{path}/events/ts=%{time_slice}/events_%{index}-%{hostname}.%{file_extension}
     time_slice_format %Y%m%d-%H
     path log
